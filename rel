@@ -1,0 +1,14 @@
+#!/bin/bash
+
+OUT_NAME=${1:-$(git rev-parse --abbrev-ref HEAD)}
+OUT_NAME=${OUT_NAME#refs/heads/}
+OUT_NAME=${OUT_NAME#refs/tags/}
+OUT_NAME=${OUT_NAME#refs/pull/}
+OUT_NAME=${OUT_NAME#refs/remotes/}
+OUT_NAME=${OUT_NAME#refs/}
+OUT_NAME=${OUT_NAME#refs/merge/}
+
+git archive --format=tar --prefix="raspi-firmware-$OUT_NAME/" "$OUT_NAME" \
+  boot/LICENCE.broadcom 'boot/*.elf' 'boot/*.dat' 'boot/*.bin' \
+  -o "raspi-firmware_$OUT_NAME.orig.tar" \
+  xz -T0 -9 "raspi-firmware_$OUT_NAME.orig.tar"
